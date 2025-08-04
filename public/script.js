@@ -6,8 +6,8 @@ const chatInterface = document.getElementById('chatInterface');
 const usernameInput = document.getElementById('usernameInput');
 const joinBtn = document.getElementById('joinBtn');
 const leaveBtn = document.getElementById('leaveBtn');
-const currentUser = document.getElementById('currentUser');
 const usersList = document.getElementById('usersList');
+const userCount = document.getElementById('userCount');
 const messages = document.getElementById('messages');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
@@ -32,7 +32,16 @@ usernameInput.addEventListener('keypress', (e) => {
 // Message Event Listeners
 sendBtn.addEventListener('click', sendMessage);
 messageInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage();
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+    }
+});
+
+// Auto-resize textarea
+messageInput.addEventListener('input', () => {
+    messageInput.style.height = 'auto';
+    messageInput.style.height = Math.min(messageInput.scrollHeight, 120) + 'px';
 });
 
 // Typing indicators
@@ -51,7 +60,6 @@ function joinChat() {
         
         loginScreen.classList.add('hidden');
         chatInterface.classList.remove('hidden');
-        currentUser.textContent = `Welcome, ${username}!`;
         messageInput.focus();
     } else {
         alert('Please enter a username (at least 2 characters)');
@@ -63,6 +71,7 @@ function sendMessage() {
     if (message) {
         socket.emit('chat message', { message });
         messageInput.value = '';
+        messageInput.style.height = 'auto';
         stopTyping();
     }
 }
@@ -94,13 +103,19 @@ function stopTyping() {
 
 function addMessage(messageData, isOwn = false) {
     const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${isOwn ? 'own' : 'other'}`;
+    messageDiv.className = `message ${isOwn ? 'user' : 'assistant'}`;
+    
+    const avatarInitial = messageData.username.charAt(0).toUpperCase();
     
     messageDiv.innerHTML = `
-        <div class="message-header">
-            ${messageData.username} • ${messageData.timestamp}
+        <div class="message-avatar">${avatarInitial}</div>
+        <div class="message-content">
+            <div class="message-header">
+                <span class="message-username">${escapeHtml(messageData.username)}</span>
+                <span class="message-time">${messageData.timestamp}</span>
+            </div>
+            <div class="message-text">${escapeHtml(messageData.message)}</div>
         </div>
-        <div class="message-text">${escapeHtml(messageData.message)}</div>
     `;
     
     messages.appendChild(messageDiv);
@@ -117,6 +132,8 @@ function addSystemMessage(text) {
 
 function updateUsersList(users) {
     usersList.innerHTML = '';
+    userCount.textContent = users.length;
+    
     users.forEach(user => {
         const userDiv = document.createElement('div');
         userDiv.className = 'user-item';
@@ -126,7 +143,8 @@ function updateUsersList(users) {
 }
 
 function scrollToBottom() {
-    messages.scrollTop = messages.scrollHeight;
+    const conversationContainer = document.querySelector('.conversation-container');
+    conversationContainer.scrollTop = conversationContainer.scrollHeight;
 }
 
 function escapeHtml(text) {

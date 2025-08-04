@@ -1,48 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Room</title>
+    <title>ChatRoom</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="container">
+<body class="chatgpt-theme">
+    <div class="app-container">
         <!-- Login Screen -->
         <div id="loginScreen" class="login-screen">
-            <div class="login-form">
-                <h1>Join Chat Room</h1>
-                <input type="text" id="usernameInput" placeholder="Enter your username" maxlength="20">
-                <button id="joinBtn">Join Chat</button>
+            <div class="login-card">
+                <div class="login-header">
+                    <h1>Welcome to ChatRoom</h1>
+                    <p>Enter your name to start chatting</p>
+                </div>
+                <div class="login-form">
+                    <input type="text" id="usernameInput" placeholder="Your name" maxlength="20">
+                    <button id="joinBtn" class="primary-btn">
+                        <span>Continue</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 1l7 7-7 7-1.414-1.414L11.172 9H1V7h10.172L6.586 2.414 8 1z"/>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
 
         <!-- Chat Interface -->
         <div id="chatInterface" class="chat-interface hidden">
-            <div class="chat-header">
-                <h2>Chat Room</h2>
-                <div class="user-info">
-                    <span id="currentUser"></span>
-                    <button id="leaveBtn">Leave</button>
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>ChatRoom</h2>
+                    <button id="leaveBtn" class="leave-btn" title="Leave chat">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M6 2v2H2v8h4v2H1a1 1 0 01-1-1V3a1 1 0 011-1h5zM10.414 8L8 5.586 9.414 4.172 14.828 9.586a.5.5 0 010 .828L9.414 15.828 8 14.414 10.414 12H4v-2h6.414z"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div class="users-section">
+                    <div class="users-header">
+                        <h3>Online</h3>
+                        <span id="userCount" class="user-count">0</span>
+                    </div>
+                    <div id="usersList" class="users-list"></div>
                 </div>
             </div>
 
-            <div class="chat-body">
-                <!-- Users List -->
-                <div class="users-sidebar">
-                    <h3>Online Users</h3>
-                    <div id="usersList"></div>
-                </div>
-
-                <!-- Chat Messages -->
-                <div class="messages-container">
-                    <div id="messages" class="messages"></div>
+            <!-- Main Chat Area -->
+            <div class="main-content">
+                <div class="conversation-container">
+                    <div id="messages" class="messages-area"></div>
                     <div id="typingIndicator" class="typing-indicator"></div>
-                    
-                    <!-- Message Input -->
-                    <div class="message-input-container">
-                        <input type="text" id="messageInput" placeholder="Type your message..." maxlength="500">
-                        <button id="sendBtn">Send</button>
+                </div>
+                
+                <!-- Input Area -->
+                <div class="input-area">
+                    <div class="input-container">
+                        <div class="input-wrapper">
+                            <textarea 
+                                id="messageInput" 
+                                placeholder="Message ChatRoom..." 
+                                maxlength="500"
+                                rows="1"></textarea>
+                            <button id="sendBtn" class="send-btn" title="Send message">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
